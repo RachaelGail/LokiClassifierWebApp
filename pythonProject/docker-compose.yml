@@ -1,0 +1,47 @@
+version: "3.9"
+
+networks:
+  loki_net:
+    name: loki_net
+    driver: bridge
+
+services:
+  loki:
+    container_name: "loki"
+#    image: "loki:base"
+    build:
+      context: .
+    networks:
+      - loki_net
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+    working_dir: /app
+    entrypoint: "python app.py"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.loki.loadbalancer.server.port=5000"
+      - "traefik.docker.network=loki_net"
+      - "traefik.http.routers.loki.rule=Host(`loki.localhost`)"
+
+  traefik:
+    image: "traefik:v2.6"
+    container_name: "traefik"
+    networks:
+      - loki_net
+    command:
+      #- "--log.level=DEBUG"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    labels:
+      - "traefik.http.routers.traefik.entrypoints=http"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.localhost`)"
+      - "traefik.http.services.traefik.loadbalancer.server.port=8080"

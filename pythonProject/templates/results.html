@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block content %}
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="container flex">
+            <h1 class="logo">LOKI</h1>
+             <nav>
+                <ul style="list-style: none;">
+                    <li><a href="/">Home</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Head -->
+    <section class="visuals-head bg-primary py-3">
+        <div class="container grid">
+            <div>
+                <h1 class="xl">Visuals</h1>
+                <p class="lead">
+                    The Classification for this Text is:
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="visuals-main my-2">
+        <div class="container grid grid-3">
+
+            <div class="card flex results">
+                <img src={{results}} alt="Email Icon">
+            </div>
+
+             <div class="card flex">
+                  <img src={{word_cloud_image}} alt="WordCloud Icon">
+            </div>
+
+            <div class="card flex">
+                <p>Words within the text that make us believe that this message is {{message}}</p>
+                <h2>{{text}}</h2>
+            </div>
+
+            <div class="card flex">
+                <i class="fas fa-tags fa-3x"></i>
+                    <p>The 5 most common words in the text:<br></p>
+                    <h2 align="center">{{most_common[0][0]}}<br>
+                        {{most_common[1][0]}}<br>
+                        {{most_common[2][0]}}<br>
+                        {{most_common[3][0]}}<br>
+                        {{most_common[4][0]}}<br>
+                </h2>
+            </div>
+
+            <div class="card flex">
+                <i class="fas fa-calculator fa-3x"></i>
+                <h4>Number of words in your text:    <br></h4>
+                <h2 align="center"><strong>   {{number_of_words}}</strong></h2>
+            </div>
+
+            <div class="card flex">
+                <i class="fas fa-bar-chart fa-3x"></i>
+                <p>
+                    Please rate your experience with us on Trust Pilot!
+                </p>
+            </div>
+
+        </div>
+    </section>
+{% endblock %}

@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% block content %}
+
+   <!-- Navbar -->
+    <div class="navbar">
+        <div class="container flex">
+            <h1 class="logo">CHANGE ME</h1>
+        </div>
+    </div>
+
+    <!-- Showcase -->
+    <section class="showcase">
+        <div class="container grid">
+            <div class="showcase-text">
+                <h1>Is this Email Legitimate?</h1>
+                <p> Just save the email down to your desktop </p>
+                <p> and upload it via the Upload Button </p>
+                <p> Let us do the rest! </p>
+            </div>
+            <div class="showcase-form card">
+                <h2>Upload your Email here</h2>
+
+                    <form method="POST" class="form" enctype="multipart/form-data" action="{{ url_for('home') }}">
+                        <input type="file" id="actual-btn" name="userinput" hidden/>
+                        <label for="actual-btn" class="btn">Choose File</label>
+                        <p><i>upload your text file here </i></p>
+                        <input type="submit" name="submit" class="btn btn-primary" onclick="$('.loading').show();";>
+                    </form>
+                <div class="loading" style="display:none;">
+                    <img src="{{loading_gif}}" alt="loading gif" />Analysing...
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="stats">
+        <div class="container">
+
+            <div class="grid grid-3 text-center my-4">
+                <div>
+                    <i class="fas fa-server fa-3x"></i>
+                    <h3>10,349,405</h3>
+                    <p class="text-primary">Emails Read</p>
+                </div>
+                <div>
+                    <i class="fas fa-upload fa-3x"></i>
+                    <h3>97%</h3>
+                    <p class="text-primary">Accuracy</p>
+                </div>
+                <div>
+                    <i class="fas fa-project-diagram fa-3x"></i>
+                    <h3>4.7</h3>
+                    <p class="text-primary">On Trust Pilot</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="text bg-primary my-2 py-2">
+        <div class="container grid">
+            <div class="text-center">
+                <h2 class="lg">Text Analysis</h2>
+                <p class="lead my-1">Text Classification: Fast, Efficient, Reliable!</p>
+            </div>
+        </div>
+    </section>
+
+    <!--Languages -->
+    <section class="languages">
+        <h2 class="md text-center my-2">
+            Upcoming Languages
+        </h2>
+        <div class="container flex">
+            <div class="card">
+                <h4>Swiss</h4>
+                <img class = "card-img" src="{{ url_for('static', filename='images/countries/switzerland.png') }}" alt="SwissFlag" width ="10%">
+            </div>
+            <div class="card">
+                <h4>Irish</h4>
+                <img class = "card-img"  src="{{ url_for('static', filename='images/countries/ireland.png') }}"  alt="EireFlag" width ="10%">
+              </div>
+
+              <div class="card">
+                <h4>German</h4>
+                <img class = "card-img"  src="{{ url_for('static', filename='images/countries/germany.png') }}"  alt="GermanFlag" width ="10%">
+              </div>
+              <div class="card">
+                <h4>French</h4>
+                <img class = "card-img"  src="{{ url_for('static', filename='images/countries/france.png') }}"  alt="FrenchFlag" width ="10%">
+              </div>
+              <div class="card">
+                <h4>Spanish</h4>
+                <img class = "card-img"  src="{{ url_for('static', filename='images/countries/spain.png') }}"  alt="SpanishFlag" width ="10%">
+            </div>
+        </div>
+    </section>
+{% endblock %}

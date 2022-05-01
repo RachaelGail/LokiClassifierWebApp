@@ -15,24 +15,21 @@ from flask import Flask, render_template, request, flash
 from werkzeug.utils import redirect
 
 app = Flask(__name__)
-
-# CONSTANTS
 app.secret_key = "super secret key"
 
+# CONSTANTS
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
-all_stop_words = pickle.load(open('models/all_stop_words.pkl', 'rb'))
-classifier_model = pickle.load(open('models/classifier.pkl', 'rb'))
-vec = pickle.load(open('models/vectorizer.pkl', 'rb'))
-top_spam_words = pickle.load(open('models/top_spam_words.pkl', 'rb'))
-top_ham_words = pickle.load(open('models/top_ham_words.pkl', 'rb'))
-
-UPLOAD_FOLDER = 'uploads'
+ALL_STOP_WORDS = pickle.load(open('models/all_stop_words.pkl', 'rb'))
+CLASSIFIER_MODEL = pickle.load(open('models/classifier.pkl', 'rb'))
 CLOUD_IMAGE = 'static/images/wordcloud/word_cloud.png'
-WORD_CLOUD_CREATED_PATH = 'static/images/wordcloud/created_wordcloud.png'
-
-SPAM_ICON = "/static/images/Spam.png"
+LOADING_GIF = "/static/styles/throbber.gif"
 NON_SPAM_ICON = "/static/images/NonSpam.png"
-loading_gif = "/static/styles/throbber.gif"
+UPLOAD_FOLDER = 'uploads'
+SPAM_ICON = "/static/images/Spam.png"
+TOP_HAM_WORDS = pickle.load(open('models/top_ham_words.pkl', 'rb'))
+TOP_SPAM_WORDS = pickle.load(open('models/top_spam_words.pkl', 'rb'))
+WORD_CLOUD_CREATED_PATH = 'static/images/wordcloud/created_wordcloud.png'
+VEC = pickle.load(open('models/vectorizer.pkl', 'rb'))
 
 
 # FUNCTIONS
@@ -61,7 +58,7 @@ def email_body_generator(uploaded_filepath):
     return email_body
 
 
-def clean_msg_nohtml(message, stop_words=set(all_stop_words)):
+def clean_msg_nohtml(message, stop_words=set(ALL_STOP_WORDS)):
     # Remove HTML tags
     soup = BeautifulSoup(message, 'html.parser')
     cleaned_text = soup.get_text()
@@ -125,24 +122,23 @@ def home():
             most_common = top_words(cleaned_text)
             df = pd.Series(text_to_list)
             # Vectorize the data:
-            test_verify_classifier = vec.transform(df)
+            test_verify_classifier = VEC.transform(df)
             # predicting the data with the classifier:
-            prediction = classifier_model.predict(test_verify_classifier)[0]
+            prediction = CLASSIFIER_MODEL.predict(test_verify_classifier)[0]
 
         if prediction != 1:
-            same_values = set(top_ham_words).intersection(text_to_list)
+            same_values = set(TOP_HAM_WORDS).intersection(text_to_list)
             extracted_words = '      |  '.join([str(item) for item in same_values])
             return render_template('results.html', text=extracted_words, message="Not Spam",
-                                   most_common=most_common[0:5], number_of_words=len(number_of_words), results=NON_SPAM_ICON,
-                                   word_cloud_image=WORD_CLOUD_CREATED_PATH)
+                                   most_common=most_common, number_of_words=len(number_of_words),
+                                   results=NON_SPAM_ICON, word_cloud_image=WORD_CLOUD_CREATED_PATH)
         else:
-            same_values = set(top_spam_words).intersection(text_to_list)
+            same_values = set(TOP_SPAM_WORDS).intersection(text_to_list)
             extracted_words = '      |  '.join([str(item) for item in same_values])
             return render_template('results.html', text=extracted_words, message="Spam",
-                                   most_common=most_common[0:5], number_of_words=len(number_of_words), results=SPAM_ICON,
-                                   word_cloud_image=WORD_CLOUD_CREATED_PATH)
-
-    return render_template('home.html', loading_gif=loading_gif)
+                                   most_common=most_common, number_of_words=len(number_of_words),
+                                   results=SPAM_ICON, word_cloud_image=WORD_CLOUD_CREATED_PATH)
+    return render_template('home.html', loading_gif=LOADING_GIF)
 
 
 if __name__ == "__main__":

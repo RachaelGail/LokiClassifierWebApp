@@ -8,7 +8,7 @@ networks:
 services:
   loki:
     container_name: "loki"
-#    image: "loki:base"
+    image: "loki:base"
     build:
       context: .
     networks:
